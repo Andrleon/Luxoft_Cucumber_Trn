@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class BasePageObject<T> {
+public class BasePageObject {
 
         protected WebDriver webDriver;
 
@@ -43,10 +43,10 @@ public class BasePageObject<T> {
             }
         }
 
-        protected T getPage(String url){
+        /*protected getPage(String url){
             webDriver.get(url);
-            return (T) this;
-        }
+            return  this;
+        }*/
 
 
 
@@ -67,7 +67,7 @@ public class BasePageObject<T> {
         }
 
         protected String getText(By element){
-            return findElementWithWait(element).getText();
+            return webDriver.findElement(element).getText();
         }
 
         protected boolean isElementPresent(By element){

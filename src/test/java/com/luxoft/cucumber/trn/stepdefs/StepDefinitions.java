@@ -3,21 +3,37 @@ package com.luxoft.cucumber.trn.stepdefs;
 import com.luxoft.cucumber.trn.pageobjects.EtsyComPageObject;
 import com.luxoft.cucumber.trn.pageobjects.SearcResultsPage;
 import cucumber.api.PendingException;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+
+import cucumber.api.java.es.E;
+import io.cucumber.datatable.DataTable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class StepDefinitions {
 
-    /////////как закрыть окно браузера???
-    WebDriver wd = new ChromeDriver();
-    EtsyComPageObject etsyPage = new EtsyComPageObject(wd);
+    WebDriver wd;
+    EtsyComPageObject etsyPage;
     SearcResultsPage etsySearchResultsPage;
+
+    @Before
+    public void setUp(){
+        wd = new ChromeDriver();
+        etsyPage = new EtsyComPageObject(wd);
+    }
+
 
 
     @Given("I am on the main page")
@@ -45,5 +61,52 @@ public class StepDefinitions {
         Assertions.assertEquals(searchResults, etsySearchResultsPage.getSearchResultName());
     }
 
+
+    @When("I search for items and apply filters:")
+    public void i_search_for_items_and_apply_filters(DataTable dataTable) {
+        List<Map<String, String>> values = dataTable.asMaps(String.class, String.class);
+        ArrayList<String> strings = new ArrayList<>();
+        for (Map<String, String> el : values){
+            etsySearchResultsPage = etsyPage.searchFor(el.get("items"));
+            etsySearchResultsPage.applyFilterFromCategory(el.get("filter category"), el.get("filter"));
+        }
+    }
+
+    /*@When("I search for items and apply filters:")
+    public void i_search_for_items_and_apply_filters(DataTable dataTable) {
+        List<List<String>> values = dataTable.asLists();
+        String searchQuery = values.get(1).get(0);
+        String category = values.get(1).get(1);
+        String filter = values.get(1).get(2);
+        etsySearchResultsPage = etsyPage.searchFor(searchQuery);
+        etsySearchResultsPage.applyFilterFromCategory(category, filter);
+    }
+*/
+
+    @Then("next filter tags are visible:")
+    public void next_filter_tags_are_visible(DataTable dataTable) {
+        List<String> expectedTags = dataTable.rows(1).asList();
+        Assertions.assertLinesMatch(expectedTags, etsySearchResultsPage.getAppliedFilterTagsForSearchResults());
+    }
+
+    @When("I set page language to \"(.*?)\"")
+    public void i_set_page_language_to(String language) {
+        etsyPage = etsyPage.changeLanguageTo(language);
+
+    }
+
+    @When("I select \"(.*?)\" ship destination")
+    public void i_select_ship_destination(String country) {
+        etsySearchResultsPage = etsySearchResultsPage.selectShipToCountry(country);
+
+    }
+
+
+
+
+    @After
+    public void tearDown(){
+        wd.quit();
+    }
 
    }
