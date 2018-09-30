@@ -1,0 +1,18 @@
+@smoke
+Feature: Search for items on Etsy
+  As a user
+  I want to search for different items
+  So that I will be able to buy necessary items fast
+
+  Scenario: Search for particular item
+    Given I am on the main page
+    When I accept terms and conditions
+    # Implement next step
+    When I set page language to "English"
+    And I search for "leather bag" items
+    Then I see search results
+    When I select "Belarus" ship destination
+    Then I get search results for "leather bag" items
+    And next filter tags are visible:
+      |tags|
+      |Ships to Belarus|
