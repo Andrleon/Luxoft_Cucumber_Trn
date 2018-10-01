@@ -65,7 +65,6 @@ public class StepDefinitions {
     @When("I search for items and apply filters:")
     public void i_search_for_items_and_apply_filters(DataTable dataTable) {
         List<Map<String, String>> values = dataTable.asMaps(String.class, String.class);
-        ArrayList<String> strings = new ArrayList<>();
         for (Map<String, String> el : values){
             etsySearchResultsPage = etsyPage.searchFor(el.get("items"));
             etsySearchResultsPage.applyFilterFromCategory(el.get("filter category"), el.get("filter"));
@@ -101,12 +100,29 @@ public class StepDefinitions {
 
     }
 
+    @When("I set minimum price to \"(.*?)\"")
+    public void i_set_minimum_price_to(String priceFrom) {
+        etsySearchResultsPage.setPriceFilterFrom(priceFrom);
+    }
 
+    @When("I set maximum price to \"(.*?)\"")
+    public void i_set_maximum_price_to(String priceTo) {
+        etsySearchResultsPage.setPriceFilterTo(priceTo);
+    }
+
+    @When("I filter items by price")
+    public void i_filter_items_by_price() {
+        etsySearchResultsPage.applyFilterByPrice();
+    }
+
+    @Then("next price filtering tag \"(.*?)\" is visible")
+    public void next_price_filtering_tag_is_visible(String filterByPriceTag) {
+        Assertions.assertEquals(filterByPriceTag, etsySearchResultsPage.getAppliedFilterTagsForSearchResults().get(0));
+    }
 
 
     @After
     public void tearDown(){
         wd.quit();
     }
-
    }

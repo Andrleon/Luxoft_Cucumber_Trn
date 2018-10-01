@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "src/test/resources/features/EtsyComHomeWork.feture",
+        features = "src/test/resources/features/EtsyComScenarioOutline.feature",
         glue = "com.luxoft.cucumber.trn.stepdefs",
         plugin = {
                 "pretty",

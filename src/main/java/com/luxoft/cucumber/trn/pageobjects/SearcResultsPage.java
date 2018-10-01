@@ -20,6 +20,9 @@ public class SearcResultsPage extends BasePageObject{
     private By searchResultName = By.xpath("//div/span/a[@title = 'All categories']/span[contains(text(), 'All categories')]/../../../h1");
     private By filteringTags = By.cssSelector(".tag");
     private By shipToMenu = By.xpath("//*[@id='ship_to_select']");
+    private By priceFilterFrom = By.xpath("//*[@id='search-filter-min-price-input']");
+    private By priceFilterTo = By.xpath("//*[@id='search-filter-max-price-input']");
+    private By applyFilterByPriceButton = By.xpath("//button[@data-context = 'price']");
 
 
     private  String FILTER_FOR_CATEGORY_LINK = "//h5[text()='%s']/../..//a[contains(.,'%s')]";
@@ -52,6 +55,22 @@ public class SearcResultsPage extends BasePageObject{
 
     public SearcResultsPage selectShipToCountry(String country){
         write(country + Keys.ENTER, shipToMenu);
+        return this;
+    }
+
+    public SearcResultsPage setPriceFilterFrom(String priceFrom) {
+        write(priceFrom, priceFilterFrom);
+        return this;
+    }
+
+    public SearcResultsPage setPriceFilterTo(String priceTo) {
+        write(priceTo, priceFilterTo);
+        return this;
+    }
+
+
+    public SearcResultsPage applyFilterByPrice() {
+        click(applyFilterByPriceButton);
         return this;
     }
 }
